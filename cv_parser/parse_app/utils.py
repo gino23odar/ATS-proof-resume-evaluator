@@ -113,8 +113,8 @@ def extract_resume_info(text: str):
 
         start = response_text.find("{")
         end = response_text.rfind("}") + 1
-        print(start, end)
-        print(response_text[start:end])
+        # print(start, end)
+        # print(response_text[start:end])
         json_str = response_text[start:end]
         data = json.loads(json_str)
 
