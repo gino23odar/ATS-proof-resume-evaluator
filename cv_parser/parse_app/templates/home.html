@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Parser</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f7f7f7;
+            color: #333;
+        }
+
+        .header {
+            background-color: #14458f;
+            padding: 20px 0;
+            color: #ffffffee;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            gap: 10vw;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffffee;
+        }
+        .faqs{
+          
+            font-weight: bold;
+            border-radius: 5px;
+            color: #14458f;
+            background-color: #ffffffee;
+            padding: 5px 10px;
+    
+           
+        }
+        .nav{
+            display: flex;
+        }
+        .nav a {
+            margin: 0 10px;
+            color: #ffffffee;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .buttons {
+            display: flex;
+            align-items: center;
+        }
+
+        .main-content {
+            max-width: 800px;
+            margin: 50px auto;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .parser-section {
+            background-color: #ffffffee;
+            padding: 40px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .parser-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .parser-section h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #14458f;
+        }
+
+        .parser-section p {
+            font-size: 16px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .parse-button {
+            background-color: #14458f;
+            color: #ffffffee;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            margin-top: 15px;
+            position: relative;
+        }
+
+        .parse-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .loading-text {
+            display: none;
+            color: green;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .upload-gizmo {
+            display: flex;
+            flex-direction: row;
+            margin-bottom: 5vh;
+            width: 100%;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            .upload-gizmo {
+                flex-direction: column;
+            }
+        }
+
+        .upload-section {
+            width: 50%;
+            background-color: #ffffffee;
+            padding: 40px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .ad-section {
+            background-color: #ffffffee;
+            padding: 40px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .upload-box {
+            border: 2px dashed #ddd;
+            height: auto;
+            padding: 40px;
+            text-align: center;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .upload-label {
+            display: block;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .upload-text {
+            font-size: 16px;
+        }
+
+        .upload-box p {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .file-name {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        /* Hide default file input button */
+        #fileInput {
+            display: none;
+        }
+
+        .suggestions-area{
+            display: flex;
+            flex-direction: row;
+            margin-bottom: 5vh;
+            width: 100%;
+            gap: 20px;
+            justify-content: center;
+        }
+        @media (max-width: 768px) {
+            .suggestions-area {
+                flex-direction: column;
+            }
+        }
+
+        .result-section {
+            background-color: #ffffffee;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            display: none;
+            max-width:40%;
+            margin: 20px auto;
+        }
+
+        .result-textarea {
+            width: 100%;
+            height: 500px; /* Increased height for better visibility */
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: vertical;
+            font-family: 'Arial', sans-serif;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .ad-textarea {
+            width: 100%;
+            height: 500px; /* Increased height for better visibility */
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: vertical;
+            font-family: 'Arial', sans-serif;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="faqs">
+                FAQs
+            </div>
+            <div class="logo">ATS-Wiz</div>
+            <nav class="nav">
+                <a href="#">Templates</a>
+                <a href="#">Links of interest</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="parser-section">
+            <div class="parser-container">
+                <h1>Resume Parser: Test Resume For ATS Compatibility</h1>
+                <p>Worried that applicant tracking system (ATS) software won’t be able to accurately scan your resume?
+                    Our online resume parser instantly scans each section of your resume to confirm your resume is
+                    ATS-friendly.</p>
+            </div>
+        </section>
+        
+        <div class="upload-gizmo">
+            <section class="upload-section">
+                <p class="loading-text" id="loadingText">Loading...</p>
+                <div class="upload-box">
+                    <form id="uploadForm" enctype="multipart/form-data">
+                        
+                        <label for="fileInput" class="upload-label">
+                            <div class="upload-icon">📄</div>
+                            <div class="upload-text">Upload Your Resume</div>
+                        </label>
+                        <input type="file" name="file" id="fileInput" autocomplete="off" required />
+                        <p>DOC, DOCX, or PDF files up to 2MB</p>
+                        <div class="file-name" id="fileName"></div>
+                        <button class="parse-button" type="submit" id="submitButton">Parse Your Resume on its own, to see what an ATS sytem would see</button>
+                    </form>
+                </div>
+            </section>
+    
+            <section class="result-section" id="resultSection">
+                <h2>Parsed Resume Result</h2>
+                <textarea id="result" class="result-textarea" readonly>hi there</textarea>
+                <div id="errorMessage" class="error-message"></div>
+            </section>
+        </div>
+        
+        <div class="suggestions-area">
+            <section class="ad-section">
+                <p class="loading-text" id="loadingText">Loading...</p>
+                <div class="upload-box">
+                    <form id="AdUploadForm" enctype="multipart/form-data">
+                        
+                        <label for="AdFileInput" class="upload-label">
+                            <div class="upload-text">Share the Job Post</div>
+                        </label>
+                        <p>Copy the description of the position you are applying for</p>
+                        <textarea id="ad-description" class="ad-textarea"></textarea>
+                        <div class="file-name" id="AdFileName"></div>
+                        <button class="parse-button" type="submit" id="AdSubmitButton">Parse Your Job Post</button>
+                    </form>
+                </div>
+            </section>
+    
+            <section class="final-result-section" id="finalResultSection">
+                <h2>Suggested Changes</h2>
+                <textarea id="finalResult" class="result-textarea" readonly></textarea>
+                <div id="errorMessage2" class="error-message"></div>
+            </section>
+        </div>
+
+    </main>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const fileName = document.getElementById('fileName');
+        const AdFileInput = document.getElementById('AdFileInput');
+        const AdFileName = document.getElementById('AdFileName');
+        const submitButton = document.getElementById('submitButton');
+        const AdSubmitButton = document.getElementById('AdSubmitButton');
+        const loadingText = document.getElementById('loadingText');
+        const resultTextarea = document.getElementById('result');
+        const finalResultTextarea = document.getElementById('finalResult');
+        const resultSection = document.getElementById('resultSection');
+        const finalResultSection = document.getElementById('finalResultSection');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorMessage2 = document.getElementById('errorMessage2');
+
+        fileInput.addEventListener('change', () => {
+            fileName.textContent = fileInput.files.length > 0 ? fileInput.files[0].name : '';
+        });
+        
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            
+            submitButton.disabled = true;
+            loadingText.style.display = 'block';
+            resultSection.style.display = 'none';
+            
+            fetch("{% url 'upload_resume' %}", {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                resultSection.style.display = 'block';
+                if (data.error) {
+                    errorMessage.textContent = data.error;
+                    resultTextarea.style.display = 'none';
+                } else {
+                    resultTextarea.value = JSON.stringify(data, null, 2);
+                    errorMessage.textContent = '';
+                    resultTextarea.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                resultSection.style.display = 'block';
+                errorMessage.textContent = 'An error occurred: ' + error;
+                resultTextarea.style.display = 'none';
+            })
+            .finally(() => {
+                submitButton.disabled = false;
+                loadingText.style.display = 'none';
+            });
+        });
+        
+        
+        
+        document.getElementById('AdUploadForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const resumeData = document.getElementById('result').value;
+            const adDescription = document.getElementById('ad-description').value;
+            
+            if (resumeData.length === 0) {
+                alert("Please parse your resume before submitting the job post.");
+                AdSubmitButton.disabled = true;
+                return;
+            }
+            
+            const formData = new FormData();
+            formData.append('ad-description', adDescription);
+            formData.append('resume-data', resumeData);
+            formData.forEach((value, key) => {
+                console.log(key, value);
+            });
+
+            AdSubmitButton.disabled = true;
+            loadingText.style.display = 'block';
+            finalResultSection.style.display = 'none';
+
+            fetch("{% url 'upload_ad' %}", {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                finalResultSection.style.display = 'block';
+                if (data.error) {
+                    errorMessage2.textContent = data.error;
+                    finalResultTextarea.style.display = 'none';
+                } else {
+                    finalResultTextarea.value = JSON.stringify(data, null, 2);
+                    errorMessage2.textContent = '';
+                    finalResultTextarea.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                finalResultSection.style.display = 'block';
+                errorMessage2.textContent = 'An error occurred: ' + error;
+                finalResultTextarea.style.display = 'none';
+            })
+            .finally(() => {
+                AdSubmitButton.disabled = false;
+                loadingText.style.display = 'none';
+            });
+        });
+    </script>
+</body>
+
+</html>
