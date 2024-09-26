@@ -12,7 +12,6 @@ def read_uploaded_file(file_object: UploadedFile, file_extension: str):
         for page_num in range(len(pdf)):
             page = pdf.load_page(page_num)
             text += page.get_text()
-    
     return text
 
 
@@ -91,13 +90,13 @@ def extract_resume_info(text: str):
         bedrock = boto3.client("bedrock-runtime", **ai_credentials_options)
         
         payload = {
-            "prompt": "[INST]" + prompt_data + "Resume Content::" + text + "[INST]",
+            "prompt": prompt_data + "Resume Content::" + text ,
             "max_gen_len": 2048,
             "temperature": 0.4,
             "top_p": 0.9,
         }
         body = json.dumps(payload)
-        model_id = "meta.llama3-8b-instruct-v1:0"
+        model_id = "meta.llama3-70b-instruct-v1:0"
 
         response = bedrock.invoke_model(
             modelId = model_id,
@@ -109,7 +108,7 @@ def extract_resume_info(text: str):
         response_body = json.loads(response.get("body").read())
         #print(response)
         response_text: str = response_body["generation"]
-        #print("response: " + response_text + "endoftext.")
+        print("response: " + response_text + "endoftext.")
 
         start = response_text.find("{")
         end = response_text.rfind("}") + 1
@@ -142,19 +141,21 @@ prompt_data3 = """
 """
 
 def extract_resume_insights(resume: str, job_posting: str):
-    test_credentials()
-    test_bedrock_invoke()
+    # test_credentials()
+    # test_bedrock_invoke()
+    print(resume)
+    print(job_posting)
     try:
         bedrock = boto3.client("bedrock-runtime", **ai_credentials_options)
         
         payload = {
-            "prompt": "[INST]" + prompt_data2 + resume + prompt_data3 + job_posting + "[INST]",
+            "prompt": prompt_data2 + resume + prompt_data3 + job_posting,
             "max_gen_len": 2048,
             "temperature": 0.4,
             "top_p": 0.9,
         }
         body = json.dumps(payload)
-        model_id = "meta.llama3-8b-instruct-v1:0"
+        model_id = "meta.llama3-70b-instruct-v1:0"
 
         response = bedrock.invoke_model(
             modelId = model_id,
@@ -166,12 +167,13 @@ def extract_resume_insights(resume: str, job_posting: str):
         response_body = json.loads(response.get("body").read())
         #print(response)
         response_text: str = response_body["generation"]
-        print("response: " + response_text + "endoftext.")
+        #print("response: " + response_text + "endoftext.")
 
         start = response_text.find("{")
         end = response_text.rfind("}") + 1
         #print(response_text[start:end])
         json_str = response_text[start:end]
+        print(f"json_str: {json_str}")
         data = json.loads(json_str)
 
     except Exception as e:
