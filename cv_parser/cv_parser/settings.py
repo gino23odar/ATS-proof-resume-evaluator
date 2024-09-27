@@ -59,6 +59,30 @@ CORS_ALLOWED_ORIGINS = [
     "https://ats-evaluator-frontend.vercel.app",
 ]
 
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://ats-evaluator-frontend.vercel.app",
+]
+
 ROOT_URLCONF = 'cv_parser.urls'
 
 TEMPLATES = [
