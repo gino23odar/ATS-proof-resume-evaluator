@@ -21,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure--e*59sa5%0(@=2kl#bj*d*hs8b3bkvpw5=4$idqw&u3=6doff9'
+SECRET_KEY = config("PROD_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['atsevalserver.zapto.org', '127.0.0.1']
 
 
 # Application definition
@@ -57,6 +57,7 @@ MIDDLEWARE = [
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     "https://ats-evaluator-frontend.vercel.app",
+    "https://54.208.60.228"
 ]
 
 CORS_ALLOW_METHODS = [
@@ -81,6 +82,7 @@ CORS_ALLOW_HEADERS = [
 
 CSRF_TRUSTED_ORIGINS = [
     "https://ats-evaluator-frontend.vercel.app",
+    "https://54.208.60.228"
 ]
 
 ROOT_URLCONF = 'cv_parser.urls'
